@@ -1,0 +1,55 @@
+<%- include('../layouts/header') %>
+
+<div class="page-title-section">
+    <div>
+        <h1>Recruiter Dashboard</h1>
+        <p style="color: var(--text-secondary); margin-top: 4px;">Monitor your active job listings and view applicant submissions</p>
+    </div>
+    <a href="/recruiter/post-job" class="btn btn-primary"><i class="fa-solid fa-circle-plus"></i> Post New Job</a>
+</div>
+
+<% if (jobs.length > 0) { %>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Job Title</th>
+                    <th>Location</th>
+                    <th>Stipend</th>
+                    <th>Deadline</th>
+                    <th>Total Applicants</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% jobs.forEach(job => { %>
+                    <tr>
+                        <td style="font-weight: 700; color: #ffffff;"><%= job.title %></td>
+                        <td><i class="fa-solid fa-location-dot"></i> <%= job.location %></td>
+                        <td><i class="fa-solid fa-indian-rupee-sign"></i> <%= job.stipend.toLocaleString() %>/mo</td>
+                        <td><%= new Date(job.deadline).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' }) %></td>
+                        <td>
+                            <span class="user-badge" style="font-size: 0.85rem; padding: 2px 10px; background: rgba(99, 102, 241, 0.1); color: var(--color-primary); border-color: rgba(99, 102, 241, 0.2);">
+                                <strong><%= job.applicant_count %></strong> applicants
+                            </span>
+                        </td>
+                        <td>
+                            <a href="/recruiter/applicants/<%= job.id %>" class="btn btn-outline" style="padding: 6px 14px; font-size: 0.8rem;">
+                                <i class="fa-solid fa-users"></i> View Applicants
+                            </a>
+                        </td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    </div>
+<% } else { %>
+    <div class="card empty-state">
+        <i class="fa-solid fa-briefcase"></i>
+        <h3>No Jobs Posted Yet</h3>
+        <p>Start hiring by posting your first internship or job opportunity listing today.</p>
+        <a href="/recruiter/post-job" class="btn btn-primary" style="margin-top: 20px;"><i class="fa-solid fa-circle-plus"></i> Post a Job</a>
+    </div>
+<% } %>
+
+<%- include('../layouts/footer') %>

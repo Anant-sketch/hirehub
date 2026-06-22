@@ -1,0 +1,70 @@
+<%- include('../layouts/header') %>
+
+<div style="margin-bottom: 20px;">
+    <a href="/recruiter/dashboard" class="btn btn-secondary btn-text" style="padding-left: 0; color: var(--text-secondary);"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+</div>
+
+<div class="card" style="max-width: 650px; margin: 0 auto 40px auto;">
+    <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 16px; margin-bottom: 24px;">
+        <h2>Post New Job Opportunity</h2>
+        <p style="color: var(--text-secondary); font-size: 0.9rem;">Fill in the details to list an internship, job posting, or contract role</p>
+    </div>
+
+    <% if (typeof error !== 'undefined' && error) { %>
+        <div class="alert alert-danger">
+            <i class="fa-solid fa-triangle-exclamation"></i> <%= error %>
+        </div>
+    <% } %>
+
+    <form action="/recruiter/post-job" method="POST">
+        <div class="form-group">
+            <label for="title">Job Title</label>
+            <input type="text" id="title" name="title" required placeholder="e.g. Full Stack Developer Intern">
+        </div>
+
+        <div class="form-group">
+            <label for="description">Job Description</label>
+            <textarea id="description" name="description" rows="6" required placeholder="Describe the responsibilities, requirements, and about the company..."></textarea>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="location">Location</label>
+                <input type="text" id="location" name="location" required placeholder="e.g. Remote, Bangalore">
+            </div>
+            
+            <div class="form-group">
+                <label for="stipend">Monthly Stipend / Salary (INR)</label>
+                <input type="number" id="stipend" name="stipend" required min="0" placeholder="e.g. 25000">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="job_type">Job Type</label>
+                <select id="job_type" name="job_type" required>
+                    <option value="Internship">Internship</option>
+                    <option value="Full-time">Full-time</option>
+                    <option value="Part-time">Part-time</option>
+                    <option value="Contract">Contract</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="deadline">Application Deadline</label>
+                <input type="date" id="deadline" name="deadline" required>
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 24px;">
+            <label for="skills_required">Skills Required (Comma separated)</label>
+            <input type="text" id="skills_required" name="skills_required" required placeholder="e.g. Node.js, Express, React">
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; justify-content: center;">
+            <i class="fa-solid fa-circle-plus"></i> Publish Job Posting
+        </button>
+    </form>
+</div>
+
+<%- include('../layouts/footer') %>

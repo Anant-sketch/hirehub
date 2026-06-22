@@ -1,0 +1,108 @@
+<%- include('../layouts/header') %>
+
+<div class="page-title-section">
+    <div>
+        <h1>Find Your Next Opportunity</h1>
+        <p style="color: var(--text-secondary); margin-top: 4px;">Explore active listings, refine with keywords, and apply in seconds</p>
+    </div>
+</div>
+
+<!-- Search and Filter Bar -->
+<div class="search-filter-bar">
+    <form action="/applicant/dashboard" method="GET" class="search-form">
+        <div class="form-group">
+            <label for="skills">Skills / Role Keywords</label>
+            <input type="text" id="skills" name="skills" value="<%= filters.skills %>" placeholder="e.g. Node.js, React, Designer">
+        </div>
+        <div class="form-group">
+            <label for="location">Location</label>
+            <input type="text" id="location" name="location" value="<%= filters.location %>" placeholder="e.g. Remote, New York">
+        </div>
+        <div class="form-group">
+            <label for="job_type">Job Type</label>
+            <select id="job_type" name="job_type">
+                <option value="All" <%= filters.job_type === 'All' ? 'selected' : '' %>>All Types</option>
+                <option value="Full-time" <%= filters.job_type === 'Full-time' ? 'selected' : '' %>>Full-time</option>
+                <option value="Part-time" <%= filters.job_type === 'Part-time' ? 'selected' : '' %>>Part-time</option>
+                <option value="Internship" <%= filters.job_type === 'Internship' ? 'selected' : '' %>>Internship</option>
+                <option value="Contract" <%= filters.job_type === 'Contract' ? 'selected' : '' %>>Contract</option>
+            </select>
+        </div>
+        <div style="display: flex; gap: 8px;">
+            <button type="submit" class="btn btn-primary"><i class="fa-solid fa-magnifying-glass"></i> Filter</button>
+            <a href="/applicant/dashboard" class="btn btn-secondary"><i class="fa-solid fa-rotate-left"></i> Reset</a>
+        </div>
+    </form>
+</div>
+
+<!-- Jobs Grid -->
+<% if (jobs.length > 0) { %>
+    <div class="dashboard-grid">
+        <% jobs.forEach(job => { %>
+            <div class="card job-card">
+                <div>
+                    <div class="job-card-top">
+                        <!-- Simulated Company Logo Initials Avatar -->
+                        <% 
+                            // Determine a stable random avatar color based on company name
+                            const code = job.company_name.charCodeAt(0) % 5 + 1; 
+                            const initial = job.company_name.charAt(0).toUpperCase();
+                        %>
+                        <div class="company-avatar bg-<%= code %>">
+                            <%= initial %>
+                        </div>
+                        <div class="job-card-header">
+                            <span class="company-name"><%= job.company_name %></span>
+                            <h3><%= job.title %></h3>
+                        </div>
+                    </div>
+                    
+                    <div class="job-card-details">
+                        <span class="tag"><i class="fa-solid fa-location-dot"></i> <%= job.location %></span>
+                        <span class="tag tag-success"><i class="fa-solid fa-indian-rupee-sign"></i> <%= job.stipend.toLocaleString() %>/mo</span>
+                        <span class="tag tag-primary"><i class="fa-solid fa-briefcase"></i> <%= job.job_type %></span>
+                        <span class="tag"><i class="fa-solid fa-calendar-days"></i> Deadline: <%= new Date(job.deadline).toLocaleDateString([], { month: 'short', day: 'numeric' }) %></span>
+                    </div>
+
+                    <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 16px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4;">
+                        <%= job.description %>
+                    </p>
+
+                    <div class="skills-badge-list">
+                        <% job.skills_required.split(',').forEach(skill => { %>
+                            <span class="skills-badge"><%= skill.trim() %></span>
+                        <% }); %>
+                    </div>
+                </div>
+
+                <a href="/jobs/<%= job.id %>" class="btn btn-outline btn-block" style="text-align: center; margin-top: 10px;">
+                    <i class="fa-solid fa-circle-info"></i> View Details & Apply
+                </a>
+            </div>
+        <% }); %>
+    </div>
+
+    <!-- Pagination Controls -->
+    <% if (totalPages > 1) { %>
+        <div class="pagination">
+            <% if (currentPage > 1) { %>
+                <a href="/applicant/dashboard?page=<%= currentPage - 1 %>&skills=<%= filters.skills %>&location=<%= filters.location %>&job_type=<%= filters.job_type %>" class="pagination-btn"><i class="fa-solid fa-chevron-left"></i> Previous</a>
+            <% } %>
+
+            <span class="pagination-info">Page <%= currentPage %> of <%= totalPages %></span>
+
+            <% if (currentPage < totalPages) { %>
+                <a href="/applicant/dashboard?page=<%= currentPage + 1 %>&skills=<%= filters.skills %>&location=<%= filters.location %>&job_type=<%= filters.job_type %>" class="pagination-btn">Next <i class="fa-solid fa-chevron-right"></i></a>
+            <% } %>
+        </div>
+    <% } %>
+
+<% } else { %>
+    <div class="card empty-state">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <h3>No Listings Found</h3>
+        <p>Try modifying your filters or search keywords to find other opportunities.</p>
+    </div>
+<% } %>
+
+<%- include('../layouts/footer') %>

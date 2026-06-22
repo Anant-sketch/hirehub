@@ -1,0 +1,73 @@
+<%- include('../layouts/header') %>
+
+<div style="margin-bottom: 20px;">
+    <a href="/recruiter/dashboard" class="btn btn-secondary btn-text"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+</div>
+
+<div class="page-title-section">
+    <div>
+        <h1>Applicants for: <%= job.title %></h1>
+        <p style="color: var(--text-secondary); margin-top: 4px;">Review resumes and update applicant statuses</p>
+    </div>
+</div>
+
+<% if (applicants.length > 0) { %>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Applicant Name</th>
+                    <th>Email Address</th>
+                    <th>Applied Date</th>
+                    <th>Resume</th>
+                    <th>Current Status</th>
+                    <th>Update Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% applicants.forEach(candidate => { %>
+                    <tr>
+                        <td style="font-weight: 700; color: #ffffff;"><%= candidate.applicant_name %></td>
+                        <td><%= candidate.applicant_email %></td>
+                        <td><%= new Date(candidate.applied_at).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' }) %></td>
+                        <td>
+                            <a href="<%= candidate.resume_path %>" target="_blank" class="btn btn-secondary btn-text" style="font-weight: 600; color: var(--color-primary); display: inline-flex; align-items: center; gap: 6px;">
+                                <i class="fa-solid fa-file-pdf"></i> View PDF
+                            </a>
+                        </td>
+                        <td>
+                            <span class="status-badge status-<%= candidate.status.toLowerCase() %>">
+                                <%= candidate.status %>
+                            </span>
+                        </td>
+                        <td>
+                            <form action="/status/update" method="POST" style="display: flex; gap: 8px; align-items: center; max-width: 250px;">
+                                <input type="hidden" name="application_id" value="<%= candidate.id %>">
+                                <input type="hidden" name="job_id" value="<%= job.id %>">
+                                
+                                <select name="status" required style="padding: 6px 12px; background: #0f1524; border: 1px solid var(--border-color); border-radius: 6px; color: #ffffff; font-family: var(--font-sans); font-size: 0.82rem;">
+                                    <option value="Applied" <%= candidate.status === 'Applied' ? 'selected' : '' %>>Applied</option>
+                                    <option value="Reviewed" <%= candidate.status === 'Reviewed' ? 'selected' : '' %>>Reviewed</option>
+                                    <option value="Accepted" <%= candidate.status === 'Accepted' ? 'selected' : '' %>>Accepted</option>
+                                    <option value="Rejected" <%= candidate.status === 'Rejected' ? 'selected' : '' %>>Rejected</option>
+                                </select>
+                                
+                                <button type="submit" class="btn btn-primary" style="padding: 6px 12px; font-size: 0.8rem;">
+                                    Update
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    </div>
+<% } else { %>
+    <div class="card empty-state">
+        <i class="fa-solid fa-users-slash"></i>
+        <h3>No Applicants Yet</h3>
+        <p>No candidates have applied for this job listing. Check back again later.</p>
+    </div>
+<% } %>
+
+<%- include('../layouts/footer') %>

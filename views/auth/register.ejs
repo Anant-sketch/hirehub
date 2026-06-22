@@ -1,0 +1,51 @@
+<%- include('../layouts/header') %>
+
+<div class="card form-card">
+    <div style="text-align: center; margin-bottom: 24px;">
+        <i class="fa-solid fa-user-plus" style="font-size: 2.2rem; color: var(--color-primary); margin-bottom: 8px;"></i>
+        <h2>Create Account</h2>
+        <p style="color: var(--text-secondary); font-size: 0.9rem;">Join the HireHub portal today</p>
+    </div>
+
+    <% if (typeof error !== 'undefined' && error) { %>
+        <div class="alert alert-danger">
+            <i class="fa-solid fa-triangle-exclamation"></i> <%= error %>
+        </div>
+    <% } %>
+
+    <form action="/auth/register" method="POST">
+        <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" required placeholder="e.g. John Doe">
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" required placeholder="e.g. johndoe@domain.com">
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required placeholder="Min 6 characters">
+        </div>
+
+        <div class="form-group">
+            <label for="role">Register As</label>
+            <select id="role" name="role" required>
+                <option value="applicant">Applicant (Browse & Apply for Jobs)</option>
+                <option value="recruiter">Recruiter (Post Jobs & Hire)</option>
+                <option value="admin">Admin (Manage Portal)</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block" style="width: 100%; margin-top: 10px; padding: 12px;">
+            <i class="fa-solid fa-user-plus"></i> Register
+        </button>
+    </form>
+
+    <div style="text-align: center; margin-top: 20px; font-size: 0.9rem; color: var(--text-secondary);">
+        Already have an account? <a href="/auth/login" style="color: var(--color-primary); text-decoration: none; font-weight: 600;">Login here</a>
+    </div>
+</div>
+
+<%- include('../layouts/footer') %>

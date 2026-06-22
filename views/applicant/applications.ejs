@@ -1,0 +1,101 @@
+<%- include('../layouts/header') %>
+
+<div class="page-title-section">
+    <div>
+        <h1>Application Tracking</h1>
+        <p style="color: var(--text-secondary); margin-top: 4px;">Monitor and track the progress of your active applications</p>
+    </div>
+</div>
+
+<% if (applications.length > 0) { %>
+    <div class="applications-track-container">
+        <% applications.forEach(app => { %>
+            <div class="track-card">
+                <div class="track-header">
+                    <div>
+                        <span class="company-name" style="font-size: 0.85rem;"><%= app.company_name %></span>
+                        <h3 style="margin-top: 2px;"><%= app.title %></h3>
+                    </div>
+                    <div style="text-align: right;">
+                        <span style="font-size: 0.8rem; color: var(--text-muted); display: block;">Applied on</span>
+                        <span style="font-size: 0.85rem; font-weight: 600;"><%= new Date(app.applied_at).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' }) %></span>
+                    </div>
+                </div>
+
+                <!-- Custom Stepper Timeline -->
+                <% 
+                    const status = app.status; // 'Applied', 'Reviewed', 'Accepted', 'Rejected'
+                    let progressClass = 'progress-applied';
+                    if (status === 'Reviewed') progressClass = 'progress-reviewed';
+                    if (status === 'Accepted') progressClass = 'progress-accepted';
+                    if (status === 'Rejected') progressClass = 'progress-rejected';
+                %>
+                <div class="stepper <%= progressClass %>">
+                    <!-- Step 1: Applied -->
+                    <div class="step <%= (status === 'Applied' || status === 'Reviewed' || status === 'Accepted' || status === 'Rejected') ? 'completed' : '' %>">
+                        <div class="step-icon"><i class="fa-solid fa-file-signature"></i></div>
+                        <span class="step-label">Applied</span>
+                    </div>
+
+                    <!-- Step 2: Reviewed -->
+                    <div class="step <%= (status === 'Reviewed' || status === 'Accepted' || status === 'Rejected') ? 'completed' : '' %> <%= status === 'Applied' ? 'active' : '' %>">
+                        <div class="step-icon">
+                            <% if (status === 'Reviewed' || status === 'Accepted' || status === 'Rejected') { %>
+                                <i class="fa-solid fa-eye"></i>
+                            <% } else { %>
+                                2
+                            <% } %>
+                        </div>
+                        <span class="step-label">Reviewed</span>
+                    </div>
+
+                    <!-- Step 3: Accepted or Rejected -->
+                    <% if (status === 'Rejected') { %>
+                        <div class="step rejected">
+                            <div class="step-icon"><i class="fa-solid fa-circle-xmark"></i></div>
+                            <span class="step-label">Rejected</span>
+                        </div>
+                    <% } else { %>
+                        <div class="step <%= status === 'Accepted' ? 'completed' : '' %> <%= status === 'Reviewed' ? 'active' : '' %>">
+                            <div class="step-icon">
+                                <% if (status === 'Accepted') { %>
+                                    <i class="fa-solid fa-circle-check"></i>
+                                <% } else { %>
+                                    3
+                                <% } %>
+                            </div>
+                            <span class="step-label">Accepted</span>
+                        </div>
+                    <% } %>
+                </div>
+
+                <!-- Footer details inside card -->
+                <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 14px; margin-top: 20px;">
+                    <div style="font-size: 0.85rem; color: var(--text-secondary);">
+                        <% if (status === 'Applied') { %>
+                            <i class="fa-solid fa-hourglass-start" style="color: var(--color-accent);"></i> Your application has been sent and is awaiting review.
+                        <% } else if (status === 'Reviewed') { %>
+                            <i class="fa-solid fa-spinner" style="color: var(--color-warning);"></i> The recruiter has reviewed your resume and is making a decision.
+                        <% } else if (status === 'Accepted') { %>
+                            <i class="fa-solid fa-circle-check" style="color: var(--color-success);"></i> <strong>Congratulations!</strong> You have been accepted. Check your email for details.
+                        <% } else if (status === 'Rejected') { %>
+                            <i class="fa-solid fa-circle-xmark" style="color: var(--color-danger);"></i> The company has decided not to proceed with this application.
+                        <% } %>
+                    </div>
+                    <a href="<%= app.resume_path %>" target="_blank" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.8rem;">
+                        <i class="fa-solid fa-file-pdf"></i> Submitted Resume
+                    </a>
+                </div>
+            </div>
+        <% }); %>
+    </div>
+<% } else { %>
+    <div class="card empty-state">
+        <i class="fa-solid fa-paper-plane"></i>
+        <h3>No Applications Sent Yet</h3>
+        <p>Browse job listings on the dashboard and click apply to submit your details.</p>
+        <a href="/applicant/dashboard" class="btn btn-primary" style="margin-top: 20px;"><i class="fa-solid fa-magnifying-glass"></i> Explore Jobs</a>
+    </div>
+<% } %>
+
+<%- include('../layouts/footer') %>
