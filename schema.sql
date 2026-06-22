@@ -50,16 +50,49 @@ INSERT INTO users (name, email, password, role)
 VALUES ('Google India', 'recruiter@hirehub.com', '$2a$10$vI8aWBnd3GfGCsDGW2lTGe94v69.J/jE6wTUX0T1.bS3qHqXl6uU6', 'recruiter')
 ON DUPLICATE KEY UPDATE id=id;
 
+-- Additional Recruiters (Companies)
+INSERT INTO users (name, email, password, role) 
+VALUES ('Stripe India', 'stripe@hirehub.com', '$2a$10$vI8aWBnd3GfGCsDGW2lTGe94v69.J/jE6wTUX0T1.bS3qHqXl6uU6', 'recruiter')
+ON DUPLICATE KEY UPDATE id=id;
+
+INSERT INTO users (name, email, password, role) 
+VALUES ('Vercel Inc', 'vercel@hirehub.com', '$2a$10$vI8aWBnd3GfGCsDGW2lTGe94v69.J/jE6wTUX0T1.bS3qHqXl6uU6', 'recruiter')
+ON DUPLICATE KEY UPDATE id=id;
+
+INSERT INTO users (name, email, password, role) 
+VALUES ('Airbnb India', 'airbnb@hirehub.com', '$2a$10$vI8aWBnd3GfGCsDGW2lTGe94v69.J/jE6wTUX0T1.bS3qHqXl6uU6', 'recruiter')
+ON DUPLICATE KEY UPDATE id=id;
+
 -- Applicant
 INSERT INTO users (name, email, password, role) 
 VALUES ('Anant Kumar', 'applicant@hirehub.com', '$2a$10$vI8aWBnd3GfGCsDGW2lTGe94v69.J/jE6wTUX0T1.bS3qHqXl6uU6', 'applicant')
 ON DUPLICATE KEY UPDATE id=id;
 
--- Sample Job Posting (Linked to Recruiter ID = 2)
+-- Sample Job Postings
+-- Google India (Recruiter ID = 2)
 INSERT INTO jobs (recruiter_id, title, description, location, skills_required, stipend, job_type, deadline)
 VALUES (2, 'Node.js Developer Intern', 'We are looking for a Node.js backend developer intern. You will work on API integrations, design database structures in MySQL, and build scalable server routing systems.', 'Bangalore (Remote)', 'Node.js, Express, MySQL', 25000, 'Internship', DATE_ADD(CURRENT_DATE, INTERVAL 30 DAY))
 ON DUPLICATE KEY UPDATE id=id;
 
 INSERT INTO jobs (recruiter_id, title, description, location, skills_required, stipend, job_type, deadline)
 VALUES (2, 'Frontend Developer Intern', 'Join our frontend engineering team to build beautiful, responsive web views using modern CSS features, layouts, and interactive EJS template scripts.', 'New Delhi', 'HTML, CSS, JavaScript, EJS', 20000, 'Internship', DATE_ADD(CURRENT_DATE, INTERVAL 15 DAY))
+ON DUPLICATE KEY UPDATE id=id;
+
+-- Stripe India (Recruiter ID = 3 or 4 depends on auto-increment, but we seed ID or let database link it)
+-- To be safe, we query by company name
+INSERT INTO jobs (recruiter_id, title, description, location, skills_required, stipend, job_type, deadline)
+SELECT id, 'Backend Software Engineer', 'Join our core payments engineering team. You will build high-throughput transaction ledger microservices, secure API endpoints, and design scalable MySQL database schemas.', 'Bangalore', 'Node.js, MySQL, REST API, AWS', 120000, 'Full-time', DATE_ADD(CURRENT_DATE, INTERVAL 45 DAY)
+FROM users WHERE name = 'Stripe India' LIMIT 1
+ON DUPLICATE KEY UPDATE id=id;
+
+-- Vercel Inc
+INSERT INTO jobs (recruiter_id, title, description, location, skills_required, stipend, job_type, deadline)
+SELECT id, 'Frontend Solutions Architect', 'Help developer teams build fast web applications. You will work on Next.js server-side rendering architecture, design system styling, and edge middleware routing components.', 'Remote', 'Next.js, React, Tailwind, TypeScript', 95000, 'Contract', DATE_ADD(CURRENT_DATE, INTERVAL 30 DAY)
+FROM users WHERE name = 'Vercel Inc' LIMIT 1
+ON DUPLICATE KEY UPDATE id=id;
+
+-- Airbnb India
+INSERT INTO jobs (recruiter_id, title, description, location, skills_required, stipend, job_type, deadline)
+SELECT id, 'Mobile Engineer Intern', 'Create modern mobile travel booking views. You will work on React Native screens, state management logic, dynamic map APIs, and smooth UI animations.', 'Gurgaon', 'React Native, JavaScript, Redux', 35000, 'Internship', DATE_ADD(CURRENT_DATE, INTERVAL 20 DAY)
+FROM users WHERE name = 'Airbnb India' LIMIT 1
 ON DUPLICATE KEY UPDATE id=id;
