@@ -1,68 +1,79 @@
-# HireHub - Full-Stack Job & Internship Portal
+# 💼 HireHub - Full-Stack Job & Internship Portal
 
-**HireHub** is a clean, responsive, and robust Job & Internship Portal built as a server-side MVC web application. It features role-based access control, session-based authentication, resume uploads, pagination, and automated status updates.
+[![Node.js](https://img.shields.io/badge/Node.js-20.x-green.svg?style=flat&logo=node.js)](https://nodejs.org)
+[![Express](https://img.shields.io/badge/Express-4.x-black.svg?style=flat&logo=express)](https://expressjs.com)
+[![MySQL](https://img.shields.io/badge/MySQL-8.x-blue.svg?style=flat&logo=mysql)](https://mysql.com)
+[![Render Deployment](https://img.shields.io/badge/Hosted%20on-Render-darkviolet.svg?style=flat&logo=render)](https://hirehub-portal-dt5l.onrender.com)
+
+**HireHub** is a clean, robust, and responsive Job & Internship Portal structured as a server-side Model-View-Controller (MVC) web application. It features role-based access control, session-based authentication, PDF resume uploads, search filters, and automated email alerts.
+
+👉 **[Live Deployment on Render](https://hirehub-portal-dt5l.onrender.com)**
+
+---
 
 ## 🚀 Key Features
 
 ### 👤 Role-based Dashboards
-*   **Applicants**: Register, login, search & filter jobs (by skills, locations), upload PDF resumes (via Multer), and trace application status logs.
-*   **Recruiters**: Post job listings, view applicants for individual jobs, download resume attachments, and select/update applicant status.
-*   **Admin Panel**: Monitor system users and job listings, and perform cleanups by deleting accounts or postings.
+*   **Applicants**: Search & filter internships/jobs by skills and location, upload PDF resumes, and track application history logs.
+*   **Recruiters**: Post job descriptions, manage applicant rosters, download resume files, and select/update application statuses (Applied, Reviewed, Accepted, Rejected).
+*   **Admin Panel**: Monitor database users and job postings, and perform cleanups by deleting accounts or outdated listings.
 
 ### 🔒 Secure Authentication
-*   **Session State**: Session-based authentication using `express-session` cookies.
-*   **Security**: Hashed user passwords saved to MySQL using `bcryptjs`.
-*   **Protection Middlewares**: Role-based access constraints routing users securely.
+*   **Cookie Session State**: Stateful authentication using `express-session` cookies.
+*   **Password Security**: Hashed passwords encrypted and saved to MySQL using `bcryptjs` encryption.
+*   **Route Guards**: Middleware protecting private recruiter, applicant, and admin pages from unauthenticated access.
 
-### 📧 Dynamic Alerts
-*   **E-mail Updates**: Dispatches automated email messages to applicants when recruiters update their application status (using `nodemailer`).
+### 📧 Automated Notifications
+*   **Nodemailer Alerts**: Sends instant automated email notifications to applicants when recruiters update their application status.
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️ Architecture & Tech Stack
+
+HireHub follows the **MVC design pattern** to cleanly separate data, user views, and controller route logics:
+
 *   **Backend**: Node.js & Express.js
-*   **Database**: MySQL
-*   **Templating Engine**: EJS (Embedded JavaScript)
-*   **Styling**: Vanilla responsive CSS3
-*   **File Uploads**: Multer
-*   **Email Engine**: Nodemailer
-*   **Password Hashing**: Bcryptjs
+*   **Database**: MySQL (relational schemas with connection pool modules)
+*   **Templating**: EJS (Embedded JavaScript) for dynamic pages
+*   **Uploads Manager**: Multer for handling file attachments
+*   **Styling**: Responsive Vanilla CSS3 design tokens
 
 ---
 
 ## 📦 Getting Started
 
 ### 1. Database Setup
-1. Open your MySQL client (CLI, Workbench, or phpMyAdmin) and login.
-2. Run the queries in the provided [schema.sql](schema.sql) file to create the database (`hirehub_db`) and tables:
+1. Log in to your local MySQL server.
+2. Run the queries in the provided [schema.sql](schema.sql) file to create the tables:
    ```bash
    mysql -u your_username -p < schema.sql
    ```
-   *Note: This will also seed three default testing accounts (Password for all accounts is `password123`):*
-   *   **Admin**: `admin@hirehub.com`
-   *   **Recruiter**: `recruiter@hirehub.com`
-   *   **Applicant**: `applicant@hirehub.com`
+   *Note: This seeds default test accounts for testing (Password is `password123`):*
+   *   Admin: `admin@hirehub.com`
+   *   Recruiter: `recruiter@hirehub.com`
+   *   Applicant: `applicant@hirehub.com`
 
 ### 2. Configuration Setup
-1. Open the [.env](.env) file in the project root directory.
-2. Edit the database credentials to match your local MySQL configuration:
-   ```env
-   DB_HOST=localhost
-   DB_USER=your_mysql_username
-   DB_PASS=your_mysql_password
-   DB_NAME=hirehub_db
-   SESSION_SECRET=a_secure_custom_key
-   ```
-3. *(Optional)* Configure your SMTP mail credentials under `EMAIL_USER` and `EMAIL_PASS` to enable status update emails.
+Create a `.env` file in the root directory:
+```env
+PORT=3000
+DB_HOST=localhost
+DB_USER=your_mysql_username
+DB_PASS=your_mysql_password
+DB_NAME=hirehub_db
+SESSION_SECRET=a_secure_custom_key
+EMAIL_HOST=smtp.gmail.com
+EMAIL_USER=your_email@gmail.com
+EMAIL_PASS=your_app_password
+```
 
 ### 3. Installation & Run
-1. Install project node dependencies:
+1. Install node modules:
    ```bash
    npm install
    ```
-2. Start the development server (runs with nodemon):
+2. Start the dev server:
    ```bash
    npm run dev
    ```
-3. Open your browser and navigate to:
-   👉 **[http://localhost:3000](http://localhost:3000)**
+3. Open browser to: `http://localhost:3000`
